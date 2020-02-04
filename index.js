@@ -4,7 +4,9 @@ const fs = require("fs");
 const app = express();
 const HTMLParser = require('node-html-parser');
 
-app.listen(1987, () => {
+const PORT = process.env.PORT || 1987;
+
+app.listen(PORT, () => {
     console.log("Server running on port 1987");
 });
 
