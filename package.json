@@ -1,0 +1,23 @@
+{
+  "name": "excelexport",
+  "version": "1.0.0",
+  "description": "API that will create specific XLS-Sheet for Statista",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "statista"
+  ],
+  "author": "Chris",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.5.15",
+    "node-fetch": "^2.6.0",
+    "node-html-parser": "^1.2.0",
+    "node-xlsx": "^0.15.0",
+    "nodemon": "^1.19.1",
+    "xlsx": "^0.14.3"
+  }
+}
