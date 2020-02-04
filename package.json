@@ -1,5 +1,5 @@
 {
-  "name": "Welcher Tag ist heute",
+  "name": "WelcherTagIstHeute",
   "version": "1.0.0",
   "description": "API to get the current information on the special day",
   "main": "index.js",
