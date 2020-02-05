@@ -27,12 +27,14 @@ let cache = {};
 app.get("/no-not-na-day-n", (req, res, next) => {
     const route = 'https://welcher-tag-ist-heute.org';
     let days = [];
-    let startTime = new Date();
+    let startTime = new Date().getMilliseconds();
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
     if (currentDay in cache) {
+        let totalExecutionTime = new Date().getMilliseconds() - startTime;
         let result = cache[currentDay];
         result.fromCache = true;
+        result.executionTime = totalExecutionTime;
         res.json(result).end();
     } else {
         fetch(route)
@@ -49,7 +51,7 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                         days.push({title: title, description: description});
                     });
                 }
-                let totalExecutionTime = new Date() - startTime;
+                let totalExecutionTime = new Date().getMilliseconds() - startTime;
                 result = {
                     executionTime: totalExecutionTime,
                     fromCache: false,
