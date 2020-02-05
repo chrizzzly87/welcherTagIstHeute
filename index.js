@@ -33,7 +33,7 @@ app.get("/no-not-na-day-n", (req, res, next) => {
         let result = cache[currentDay];
         result.fromCache = true;
         result.executionTime = totalExecutionTime;
-        res.json(result).end();
+        res.json(result);
     } else {
         fetch(route)
             .then(res => res.text())
@@ -56,8 +56,8 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                     result: days,
                 },
                 // save to cache
-                cache[currentDay] = result;      
-                res.json(result).end();
+                cache[currentDay] = result;
+                res.json(result);
             });
     }
 });
