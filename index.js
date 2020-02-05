@@ -14,7 +14,8 @@ app.get("/", (req, res, next) => {
     res.send('läuft');
 });
 
-function formatDate(date) {
+function formatDate(d) {
+    let date = new Date(d);
     let month = ('0' + (date.getMonth() + 1)).substring(-2);
     let day = ('0' + date.getDate()).substring(-2);
 
@@ -30,31 +31,33 @@ app.get("/no-not-na-day-n", (req, res, next) => {
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
     if (currentDay in cache) {
-        return cache[currentDay];
+        let result = cache[currentDay];
+        result.fromCache = true;
+        res.json(result).end();
+    } else {
+        fetch(route)
+            .then(res => res.text())
+            .then(body => {
+                let parsedBody = HTMLParser.parse(body);
+                let slides = parsedBody.querySelectorAll('.slides a');
+                let result = [];
+                let days = [];
+                if (slides) {
+                    slides.forEach(slide => {
+                        let title = slide.querySelector('h2').innerHTML.trim();
+                        let description = slide.querySelector('p.text').innerHTML.trim();
+                        days.push({title: title, description: description});
+                    });
+                }
+                let totalExecutionTime = new Date() - startTime;
+                result = {
+                    executionTime: totalExecutionTime,
+                    fromCache: false,
+                    result: days,
+                },
+                // save to cache
+                cache[currentDay] = result;      
+                res.json(result).end();
+            });
     }
-
-
-    fetch(route)
-        .then(res => res.text())
-        .then(body => {
-            let parsedBody = HTMLParser.parse(body);
-            let slides = parsedBody.querySelectorAll('.slides a');
-            let result = [];
-            let days = [];
-            if (slides) {
-                slides.forEach(slide => {
-                    let title = slide.querySelector('h2').innerHTML.trim();
-                    let description = slide.querySelector('p.text').innerHTML.trim();
-                    days.push({title: title, description: description});
-                });
-            }
-            let totalExecutionTime = new Date() - startTime;
-            result = {
-                executionTime: totalExecutionTime,
-                result: days,
-            },
-            // save to cache
-            cache[currentDay] = result;      
-            res.json(result).end();
-        });
 });
