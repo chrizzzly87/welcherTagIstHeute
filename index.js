@@ -4,7 +4,7 @@ const app = express();
 const HTMLParser = require('node-html-parser');
 
 const PORT = process.env.PORT || 1987;
-
+const COOL_NAMES = ['Christian', 'Marlon', 'Nadine', 'Peter', 'Hendrik', 'Dawid', 'Valentin', 'Thorben', 'Ann-Kathrin'];
 app.listen(PORT, () => {
     console.log("Server running on port 1987");
 });
@@ -21,11 +21,16 @@ function formatDate(d) {
     return `${month}${day}`;
 }
 
+function findCommonElements(arr1, arr2) {
+    return arr1.some(item => arr2.indexOf(item) >= 0);
+}
+
 let cache = {};
 
 app.get("/no-not-na-day-n", (req, res, next) => {
     const route = 'https://welcher-tag-ist-heute.org';
     let startTime = new Date().getMilliseconds();
+
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
     if (currentDay in cache) {
@@ -52,18 +57,23 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                         });
                     });
                 }
-                let names = parsedBody.querySelector('#name p.text').innerHTML.trim().split(',');
-
+                let names = parsedBody.querySelector('#name p.text').innerHTML.trim().replace(', ', ',').split(',');
+                let hurray = 'Kein cooler Namenstag heute :(';
+                if (findCommonElements(COOL_NAMES, names)) {
+                    hurray = 'Jemand hat heute einen Namenstag!!!';
+                }
                 let totalExecutionTime = new Date().getMilliseconds() - startTime;
                 result = {
-                        executionTime: totalExecutionTime,
-                        fromCache: false,
-                        result: days,
-                        names: names
-                    },
-                    // save to cache
-                    cache[currentDay] = result;
-                res.json(result).end();
+                    executionTime: totalExecutionTime,
+                    fromCache: false,
+                    result: days,
+                    names: names,
+                    hurray: hurray
+                };
+
+                // save to cache
+                cache[currentDay] = result;
+                res.json(result);
             });
     }
 });
