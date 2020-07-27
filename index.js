@@ -48,17 +48,23 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                     slides.forEach(slide => {
                         let title = slide.querySelector('h2').innerHTML.trim();
                         let description = slide.querySelector('p.text').innerHTML.trim();
-                        days.push({title: title, description: description});
+                        days.push({
+                            title: title,
+                            description: description
+                        });
                     });
                 }
+                let names = parsedBody.querySelector('#name p.text').innerHTML.trim().split(',');
+
                 let totalExecutionTime = new Date().getMilliseconds() - startTime;
                 result = {
-                    executionTime: totalExecutionTime,
-                    fromCache: false,
-                    result: days,
-                },
-                // save to cache
-                cache[currentDay] = result;      
+                        executionTime: totalExecutionTime,
+                        fromCache: false,
+                        result: days,
+                        names: names
+                    },
+                    // save to cache
+                    cache[currentDay] = result;
                 res.json(result).end();
             });
     }
