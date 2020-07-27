@@ -26,10 +26,10 @@ let cache = {};
 app.get("/no-not-na-day-n", (req, res, next) => {
     const route = 'https://welcher-tag-ist-heute.org';
     let startTime = new Date().getMilliseconds();
-    let cache = req.query.disablecache ? req.query.disablecache : 0;
+
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
-    if (currentDay in cache && cache !== 0) {
+    if (currentDay in cache) {
         let totalExecutionTime = new Date().getMilliseconds() - startTime;
         let result = cache[currentDay];
         result.fromCache = true;
