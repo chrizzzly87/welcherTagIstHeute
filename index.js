@@ -57,7 +57,7 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                         });
                     });
                 }
-                let names = parsedBody.querySelector('#name p.text').innerHTML.trim().replace(', ', ',').split(',');
+                let names = parsedBody.querySelector('#name p.text').innerHTML.trim().replace(/, /gi, ',').split(',');
                 let hurray = 'Kein cooler Namenstag heute :(';
                 if (findCommonElements(COOL_NAMES, names)) {
                     hurray = 'Jemand hat heute einen Namenstag!!!';
