@@ -26,9 +26,10 @@ let cache = {};
 app.get("/no-not-na-day-n", (req, res, next) => {
     const route = 'https://welcher-tag-ist-heute.org';
     let startTime = new Date().getMilliseconds();
+    let cache = req.query.disablecache ? req.query.disablecache : 0;
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
-    if (currentDay in cache) {
+    if (currentDay in cache && cache !== 0) {
         let totalExecutionTime = new Date().getMilliseconds() - startTime;
         let result = cache[currentDay];
         result.fromCache = true;
@@ -46,17 +47,20 @@ app.get("/no-not-na-day-n", (req, res, next) => {
                     slides.forEach(slide => {
                         let title = slide.querySelector('h2').innerHTML.trim();
                         let description = slide.querySelector('p.text').innerHTML.trim();
-                        days.push({title: title, description: description});
+                        days.push({
+                            title: title,
+                            description: description
+                        });
                     });
                 }
                 let totalExecutionTime = new Date().getMilliseconds() - startTime;
                 result = {
-                    executionTime: totalExecutionTime,
-                    fromCache: false,
-                    result: days,
-                },
-                // save to cache
-                cache[currentDay] = result;
+                        executionTime: totalExecutionTime,
+                        fromCache: false,
+                        result: days,
+                    },
+                    // save to cache
+                    cache[currentDay] = result;
                 res.json(result);
             });
     }
