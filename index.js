@@ -1,6 +1,5 @@
 const express = require("express");
 const fetch = require('node-fetch');
-const fs = require("fs");
 const app = express();
 const HTMLParser = require('node-html-parser');
 
@@ -26,7 +25,6 @@ let cache = {};
 
 app.get("/no-not-na-day-n", (req, res, next) => {
     const route = 'https://welcher-tag-ist-heute.org';
-    let days = [];
     let startTime = new Date().getMilliseconds();
     // get current day to check if it's already cached
     let currentDay = formatDate(Date.now());
@@ -35,7 +33,7 @@ app.get("/no-not-na-day-n", (req, res, next) => {
         let result = cache[currentDay];
         result.fromCache = true;
         result.executionTime = totalExecutionTime;
-        res.json(result).end();
+        res.json(result);
     } else {
         fetch(route)
             .then(res => res.text())
